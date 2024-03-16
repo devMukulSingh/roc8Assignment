@@ -12,8 +12,8 @@ const navLinks = [
 
 const Navbar = () => {
     return (
-        <>
-            <div className='h-24 flex flex-col gap-5 px-10 py-5'>
+        <div className='h-[10rem]'>
+            <div className='flex flex-col gap-5 px-10 py-5'>
 
                 <div className='ml-auto flex gap-5'>
                     <Link
@@ -59,14 +59,14 @@ const Navbar = () => {
                 </div>
             </div>
 
-            <div className='py-2 mt-5 gap-5 flex items-center justify-center bg-neutral-100'>
+            <div className='py-2 gap-5 flex items-center justify-center bg-neutral-100'>
                 <ChevronLeft />
                 <h1 className='text-sm'>
                     Get 10% off on business sign up
                 </h1>
                 <ChevronRight />
             </div>
-        </>
+        </div>
     )
 }
 
