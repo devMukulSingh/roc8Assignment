@@ -98,7 +98,7 @@ const SignupPage = () => {
                 </h1>
                 <Link
                   className=""
-                  href={'/signin'}>
+                  href={'/signup'}>
                   SIGNUP
                 </Link>
               </div>
