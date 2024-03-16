@@ -2,13 +2,31 @@
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { BASE_URL } from "@/lib/BASE_URL";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FieldValues, useForm } from "react-hook-form"
+import { useMutation, useQuery } from "react-query";
 import * as z from "zod";
 
 const SignupPage = () => {
-
+  const router = useRouter();
+  const { mutate, isLoading } = useMutation({
+    mutationFn: (data) => {
+      return axios.post(`${BASE_URL}/signup/send-otp`, data);
+    },
+    mutationKey: ['postUser'],
+    onError(error) {
+      console.log(`Error in onSubmit User Post req ${error}`);
+    },
+    onSuccess(data) {
+      console.log(data.data);
+      
+      router.push(`/signup/verify?email=${data.data.email}`);
+    }
+  })
   const formSchema = z.object({
     name: z.string().max(20),
     password: z.string().min(6).max(20),
@@ -17,8 +35,9 @@ const SignupPage = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema)
   })
-  const onSubmit = (data: FieldValues) => {
-    console.log(data);
+  const onSubmit = async (data: FieldValues) => {
+    //@ts-ignore
+    mutate(data);
   }
   return (
     <div className="flex items-center  justify-center w-full h-[calc(100vh-10rem)]">
@@ -76,6 +95,7 @@ const SignupPage = () => {
               <Button
                 className="h-12 bg-black rounded-md"
                 type="submit"
+                disabled={isLoading}
               >
                 CREATE ACCOUNT
               </Button>

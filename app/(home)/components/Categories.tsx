@@ -3,7 +3,7 @@
 const Categories = () => {
     return (
         <div className="w-full h-[calc(100vh-10rem)] flex items-center justify-center ">
-            <div className="border h-[30rem] py-10 px-10 rounded-xl flex flex-col gap-5">
+            <div className="border h-[30rem] py-10 px-14 rounded-xl flex flex-col gap-5">
                 <h1 className="text-center text-2xl font-semibold">
                     Please mark your interests!
                 </h1>

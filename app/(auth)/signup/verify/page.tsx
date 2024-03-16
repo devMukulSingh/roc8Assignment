@@ -2,12 +2,37 @@
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp'
+import { BASE_URL } from '@/lib/BASE_URL'
 import { zodResolver } from '@hookform/resolvers/zod'
+import axios from 'axios'
+import { useParams, useSearchParams,useRouter } from 'next/navigation'
 import React from 'react'
 import { FieldValues, useForm } from 'react-hook-form';
+import { useMutation, useQuery } from 'react-query'
 import * as z from "zod";
 
-const page = () => {
+const VerifyPage = () => {
+
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const email = searchParams.get('email');
+
+    const { mutate, isLoading } = useMutation({
+        mutationFn: (data:FieldValues) => {
+          return axios.post(`${BASE_URL}/signup/verify`, {
+            email,
+            otp:data.pin
+          });
+        },
+        mutationKey: ['postUser'],
+        onError(error) {
+          console.log(`Error in onSubmit verify Post req ${error}`);
+        },
+        onSuccess(data) {
+          console.log(data.data);
+          router.push(`/`);
+        }
+      })
     const formSchema = z.object({
         pin: z.string().min(8, {
             message: 'Enter valid OTP'
@@ -17,7 +42,8 @@ const page = () => {
         resolver: zodResolver(formSchema)
     })
     const onSubmit = (data: FieldValues) => {
-        console.log(data);
+        //@ts-ignore
+        mutate(data);
     }
     return (
         <div className='flex justify-center w-screen h-[calc(100vh-10rem)]'>
@@ -45,7 +71,7 @@ const page = () => {
                                                     maxLength={8}
                                                     render={({ slots }: any) => (
                                                         <InputOTPGroup className="gap-2">
-                                                            {slots.map((slot:any, index:any) => (
+                                                            {slots.map((slot: any, index: any) => (
                                                                 <React.Fragment key={index}>
                                                                     <InputOTPSlot className="rounded-md border" {...slot} />
                                                                 </React.Fragment>
@@ -61,6 +87,7 @@ const page = () => {
                                 />
 
                                 <Button
+                                    disabled={isLoading}
                                     type="submit"
                                     className="bg-black  h-10 mt-10"
                                 >
@@ -75,4 +102,4 @@ const page = () => {
     )
 }
 
-export default page
+export default VerifyPage
