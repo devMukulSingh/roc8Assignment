@@ -9,6 +9,7 @@ import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FieldValues, useForm } from "react-hook-form"
+import toast from "react-hot-toast";
 import { useMutation, useQuery } from "react-query";
 import * as z from "zod";
 
@@ -19,7 +20,17 @@ const SignupPage = () => {
       return axios.post(`${BASE_URL}/api/signup/send-otp`, data);
     },
     mutationKey: ['postUser'],
-    onError(error) {
+    onError(error: any) {
+      console.log(error);
+      
+      if (error.response.status === 409) {
+        toast.error('User already exists')
+      }
+      else {
+        toast.error('Something went wrong')
+
+      }
+
       console.log(`Error in onSubmit User Post req ${error}`);
     },
     onSuccess(data) {

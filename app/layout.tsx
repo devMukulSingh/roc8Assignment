@@ -4,6 +4,7 @@ import "./globals.css";
 const Navbar = dynamic( () => import("@/components/commons/Navbar"),{ssr:false}) 
 import QueryProviders from "@/lib/QueryProviders";
 import dynamic from "next/dynamic";
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,6 +23,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <QueryProviders>
           <Navbar />
+          <Toaster/>
           {children}
         </QueryProviders>
       </body>

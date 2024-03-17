@@ -19,7 +19,7 @@ export async function POST (req: NextRequest, res: NextResponse) {
     console.log(isOtpCorrect)
 
     if (!isOtpCorrect)
-      return NextResponse.json({ error: 'Invalid Otp' }, { status: 400 })
+      return NextResponse.json({ error: 'Invalid Otp' }, { status: 401 })
 
     const updatedUser = await prisma.user.update({
       where: {

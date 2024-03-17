@@ -9,6 +9,7 @@ import { Loader2 } from 'lucide-react'
 import { useParams, useSearchParams, useRouter } from 'next/navigation'
 import React from 'react'
 import { FieldValues, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast'
 import { useMutation, useQuery } from 'react-query'
 import * as z from "zod";
 
@@ -26,7 +27,15 @@ const VerifyPage = () => {
             });
         },
         mutationKey: ['postUser'],
-        onError(error) {
+        onError(error: any) {
+            console.log(error);
+            if (error.response.status === 401) {
+                toast.error('Invalid otp');
+            }
+            else {
+                toast.error('Something went wrong');
+            }
+
             console.log(`Error in onSubmit verify Post req ${error}`);
         },
         onSuccess(data) {
@@ -35,7 +44,7 @@ const VerifyPage = () => {
                 userId: data.data.id,
                 name: data.data.name
             }
-            localStorage.setItem('user',JSON.stringify(user));
+            localStorage.setItem('user', JSON.stringify(user));
         }
     })
     const formSchema = z.object({
@@ -58,8 +67,8 @@ const VerifyPage = () => {
                     Verify you email
                 </h1>
                 <h1 className='text-center'>
-                    Enter the 8 digit code you have received on
-                    mukulsingh2276@gmail.com
+                    Enter the 8 digit code you have received on &nbsp;
+                    {email}
                 </h1>
                 <div>
                     <Form {...form}>
@@ -98,8 +107,8 @@ const VerifyPage = () => {
                                     className="flex gap-3 items-center bg-black  h-10 mt-10"
                                 >
                                     {
-                                        isLoading && 
-                                        <Loader2 className='animate-spin'/>
+                                        isLoading &&
+                                        <Loader2 className='animate-spin' />
                                     }
                                     VERIFY
                                 </Button>

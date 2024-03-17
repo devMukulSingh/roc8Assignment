@@ -4,7 +4,6 @@ import bcrypt from 'bcrypt'
 import { jwtSign } from '@/lib/jwt'
 
 
-
 export async function GET (req: NextRequest, res: NextResponse) {
   try {
     const email = req.nextUrl.searchParams.get('email')
@@ -28,7 +27,7 @@ export async function GET (req: NextRequest, res: NextResponse) {
     if (!user)
       return NextResponse.json(
         { error: 'Invalid credentials' },
-        { status: 400 }
+        { status: 401 }
       )
 
     const isPasswordCorrect = await bcrypt.compare(password, user.password)
@@ -36,7 +35,7 @@ export async function GET (req: NextRequest, res: NextResponse) {
     if (!isPasswordCorrect)
       return NextResponse.json(
         { error: 'Invalid credentials' },
-        { status: 400 }
+        { status: 401 }
       )
 
     const token = await jwtSign();

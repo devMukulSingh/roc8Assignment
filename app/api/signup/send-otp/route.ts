@@ -30,7 +30,7 @@ export async function POST (req: NextRequest, res: NextResponse) {
     if (isAlreadyExists)
       return NextResponse.json(
         { error: 'User already exists' },
-        { status: 400 }
+        { status: 409 }
       )
 
     const transporter = nodemailer.createTransport({
@@ -39,14 +39,14 @@ export async function POST (req: NextRequest, res: NextResponse) {
       auth: {
         // TODO: replace `user` and `pass` values from <https://forwardemail.net>
         user: 'mukulsingh2276@gmail.com',
-        pass: 'xsmtpsib-00f42b8e1a471d4d90a9dd4ad84297ec5579c3443bb7dcf65e02732723ffc1f7-t162nw5sKYf0cHMN'
+        pass: process.env.SMTP_PASS
       }
     })
 
     let otp = 0
     const sendOtpVerification = async () => {
       otp = Math.floor(Math.random() * 100000000)
-      console.log(otp)
+      // console.log(otp)
       const mailOptions = {
         from: 'mukulsingh2276@gmail.com',
         to: email,

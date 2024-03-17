@@ -14,6 +14,7 @@ export interface CategoriesProps {
 const Categories: React.FC<CategoriesProps> = ({
     categories
 }) => {
+    
     const [page, setPage] = useState(0);
 
     return (

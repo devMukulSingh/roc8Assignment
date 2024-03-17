@@ -4,12 +4,13 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/
 import { Input } from "@/components/ui/input";
 import { BASE_URL } from "@/lib/BASE_URL";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FieldValues, useForm } from "react-hook-form"
+import toast from "react-hot-toast";
 import * as z from "zod";
 
 const SignupPage = () => {
@@ -33,7 +34,8 @@ const SignupPage = () => {
           password: data.password
         }
       });
-      router.push('/');
+      toast.success('login sucess');
+      window.location.href='/'
       const user = {
         userId: res.id,
         name: res.name
@@ -41,7 +43,16 @@ const SignupPage = () => {
       localStorage.setItem('user', JSON.stringify(user));
 
     }
-    catch (e) {
+    catch (e:any) {
+      console.log(e);
+      
+      if(e.response.status===401){
+        toast.error('Invalid credentials');
+      }
+      else{
+        toast.error('Somthing went wrong');
+
+      }
       console.log(`Error in onSubmit SignIn ${e}`);
     }
     finally {

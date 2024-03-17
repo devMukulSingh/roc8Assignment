@@ -29,5 +29,5 @@ model Category{
   name                String
   checked             Boolean       @default(false)
   userId              Int         
-  user                User          @relation("userToCategories",fields: [userId],references: [id])
+  user                User          @relation("userToCategories",fields: [userId],references: [id],onDelete: Cascade)
 }
