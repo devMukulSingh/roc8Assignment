@@ -19,7 +19,7 @@ const VerifyPage = () => {
 
     const { mutate, isLoading } = useMutation({
         mutationFn: (data:FieldValues) => {
-          return axios.post(`${BASE_URL}/signup/verify`, {
+          return axios.post(`${BASE_URL}/api/signup/verify`, {
             email,
             otp:data.pin
           });
@@ -29,8 +29,8 @@ const VerifyPage = () => {
           console.log(`Error in onSubmit verify Post req ${error}`);
         },
         onSuccess(data) {
-          console.log(data.data);
           router.push(`/`);
+          localStorage.setItem('userId',data.data.id);
         }
       })
     const formSchema = z.object({
@@ -44,6 +44,7 @@ const VerifyPage = () => {
     const onSubmit = (data: FieldValues) => {
         //@ts-ignore
         mutate(data);
+
     }
     return (
         <div className='flex justify-center w-screen h-[calc(100vh-10rem)]'>

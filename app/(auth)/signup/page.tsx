@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { BASE_URL } from "@/lib/BASE_URL";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FieldValues, useForm } from "react-hook-form"
@@ -15,14 +16,13 @@ const SignupPage = () => {
   const router = useRouter();
   const { mutate, isLoading } = useMutation({
     mutationFn: (data) => {
-      return axios.post(`${BASE_URL}/signup/send-otp`, data);
+      return axios.post(`${BASE_URL}/api/signup/send-otp`, data);
     },
     mutationKey: ['postUser'],
     onError(error) {
       console.log(`Error in onSubmit User Post req ${error}`);
     },
     onSuccess(data) {
-      console.log(data.data);
       
       router.push(`/signup/verify?email=${data.data.email}`);
     }
@@ -93,10 +93,13 @@ const SignupPage = () => {
               />
 
               <Button
-                className="h-12 bg-black rounded-md"
+                className="h-12 bg-black flex gap-3 rounded-md"
                 type="submit"
                 disabled={isLoading}
               >
+                {
+                  isLoading && <Loader2/>
+                }
                 CREATE ACCOUNT
               </Button>
 

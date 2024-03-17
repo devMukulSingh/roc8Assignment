@@ -1,12 +1,10 @@
 import { prisma } from '@/lib/prisma'
 import { NextRequest, NextResponse } from 'next/server'
-import jwt from 'jsonwebtoken'
+import { jwtSign } from '@/lib/jwt'
 
 export async function POST (req: NextRequest, res: NextResponse) {
-
   try {
-
-    const { otp,email } = await req.json();
+    const { otp, email } = await req.json()
 
     if (!otp)
       return NextResponse.json({ error: 'otp is required' }, { status: 400 })
@@ -27,25 +25,21 @@ export async function POST (req: NextRequest, res: NextResponse) {
       where: {
         otp,
         email,
-        id:isOtpCorrect.id
+        id: isOtpCorrect.id
       },
       data: {
         isVerified: true
       }
     })
 
-    const token = jwt.sign(
-      {
-        data: email
-      },
-      process.env.JWT_SECRET as string
-    )
+    const token = await jwtSign()
 
-    const response = NextResponse.json({ updatedUser }, { status: 200 })
+    const response = NextResponse.json(updatedUser, { status: 200 })
 
     response.cookies.set('token', token, {
       httpOnly: true
     })
+    response.cookies.set('userId', updatedUser.id.toString())
 
     return response
   } catch (e) {

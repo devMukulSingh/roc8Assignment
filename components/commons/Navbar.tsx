@@ -1,6 +1,9 @@
-import { ChevronLeft, ChevronRight, Search, ShoppingCart } from 'lucide-react'
+'use client'
+import { BASE_URL } from '@/lib/BASE_URL'
+import axios from 'axios'
+import { ChevronLeft, ChevronRight, LogOut, Search, ShoppingCart } from 'lucide-react'
 import Link from 'next/link'
-import React from 'react'
+import { useRouter } from 'next/navigation'
 
 const navLinks = [
     { title: 'Categories' },
@@ -11,6 +14,16 @@ const navLinks = [
 ]
 
 const Navbar = () => {
+    const router = useRouter();
+    const handleLogout = async () => {
+        try {
+            const { data } = await axios.get(`${BASE_URL}/api/logout`);
+            router.push('/signin');
+        }
+        catch (e) {
+            console.log(`Error in handleLogout ${e}`);
+        }
+    }
     return (
         <div className='h-[10rem]'>
             <div className='flex flex-col gap-5 px-10 py-5'>
@@ -55,6 +68,9 @@ const Navbar = () => {
                     <div className='flex gap-10'>
                         <Search />
                         <ShoppingCart />
+                        <LogOut
+                            onClick={handleLogout}
+                            className='cursor-pointer' />
                     </div>
                 </div>
             </div>

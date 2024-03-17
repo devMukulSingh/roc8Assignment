@@ -2,8 +2,12 @@
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { BASE_URL } from "@/lib/BASE_URL";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
+import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FieldValues, useForm } from "react-hook-form"
 import * as z from "zod";
@@ -11,6 +15,8 @@ import * as z from "zod";
 const SignupPage = () => {
 
   const [type, setType] = useState<string>("password");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const formSchema = z.object({
     password: z.string().min(6).max(20),
     email: z.string().email(),
@@ -18,8 +24,25 @@ const SignupPage = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema)
   })
-  const onSubmit = (data: FieldValues) => {
-    console.log(data);
+  const onSubmit = async (data: FieldValues) => {
+    try {
+      setLoading(true);
+      const { data: res } = await axios.get(`${BASE_URL}/api/signin`, {
+        params: {
+          email:data.email,
+          password:data.password
+        }
+      });
+      router.push('/');
+      localStorage.setItem('userId',res.id);
+    }
+    catch (e) {
+      console.log(`Error in onSubmit SignIn ${e}`);
+    }
+    finally {
+      setLoading(false);
+    }
+
   }
   const handleShowPwd = () => {
     type === 'password' ? setType("text") : setType('password');
@@ -86,9 +109,15 @@ const SignupPage = () => {
               />
 
               <Button
-                className="h-12 bg-black rounded-md"
+                disabled={loading}
+                className="h-12 bg-black rounded-md flex items-center"
                 type="submit"
               >
+                {
+                  loading &&
+                  <Loader2 className="animate-spin" />
+
+                }
                 LOGIN
               </Button>
               <hr className="" />
