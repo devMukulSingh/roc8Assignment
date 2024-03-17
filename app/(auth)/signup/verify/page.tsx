@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import axios from 'axios'
 import { Loader2 } from 'lucide-react'
 import { useParams, useSearchParams, useRouter } from 'next/navigation'
-import React from 'react'
+import React, { Suspense } from 'react'
 import { FieldValues, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast'
 import { useMutation, useQuery } from 'react-query'
@@ -17,7 +17,7 @@ const VerifyPage = () => {
 
     const router = useRouter();
     const searchParams = useSearchParams();
-    const email = searchParams.get('email');
+    const email = searchParams.get('email') || '';
 
     const { mutate, isLoading } = useMutation({
         mutationFn: (data: FieldValues) => {
@@ -66,10 +66,12 @@ const VerifyPage = () => {
                 <h1 className='text-center text-2xl font-semibold'>
                     Verify you email
                 </h1>
-                <h1 className='text-center'>
-                    Enter the 8 digit code you have received on &nbsp;
-                    {email}
-                </h1>
+                <Suspense>
+                    <h1 className='text-center'>
+                        Enter the 8 digit code you have received on &nbsp;
+                        {email}
+                    </h1>
+                </Suspense>
                 <div>
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)}>

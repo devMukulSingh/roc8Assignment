@@ -16,7 +16,6 @@ export async function POST (req: NextRequest, res: NextResponse) {
       }
     })
 
-    console.log(isOtpCorrect)
 
     if (!isOtpCorrect)
       return NextResponse.json({ error: 'Invalid Otp' }, { status: 401 })
