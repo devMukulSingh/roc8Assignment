@@ -10,9 +10,8 @@ export async function GET (req: NextRequest, res: NextResponse) {
       return NextResponse.json({ error: 'Unauthenticated' }, { status: 403 })
 
     cookies().delete('token');
-    
-    const response = NextResponse.redirect(`${BASE_URL}/signin`)
-    return response
+
+    return NextResponse.json({msg:"logout sucess"},{status:200})
   } catch (e) {
     console.log(`Error in LOGOUT req${e}`)
     return NextResponse.json(

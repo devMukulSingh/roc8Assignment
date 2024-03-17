@@ -5,7 +5,8 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp
 import { BASE_URL } from '@/lib/BASE_URL'
 import { zodResolver } from '@hookform/resolvers/zod'
 import axios from 'axios'
-import { useParams, useSearchParams,useRouter } from 'next/navigation'
+import { Loader2 } from 'lucide-react'
+import { useParams, useSearchParams, useRouter } from 'next/navigation'
 import React from 'react'
 import { FieldValues, useForm } from 'react-hook-form';
 import { useMutation, useQuery } from 'react-query'
@@ -18,21 +19,25 @@ const VerifyPage = () => {
     const email = searchParams.get('email');
 
     const { mutate, isLoading } = useMutation({
-        mutationFn: (data:FieldValues) => {
-          return axios.post(`${BASE_URL}/api/signup/verify`, {
-            email,
-            otp:data.pin
-          });
+        mutationFn: (data: FieldValues) => {
+            return axios.post(`${BASE_URL}/api/signup/verify`, {
+                email,
+                otp: data.pin
+            });
         },
         mutationKey: ['postUser'],
         onError(error) {
-          console.log(`Error in onSubmit verify Post req ${error}`);
+            console.log(`Error in onSubmit verify Post req ${error}`);
         },
         onSuccess(data) {
-          router.push(`/`);
-          localStorage.setItem('userId',data.data.id);
+            router.push(`/`);
+            const user = {
+                userId: data.data.id,
+                name: data.data.name
+            }
+            localStorage.setItem('user',JSON.stringify(user));
         }
-      })
+    })
     const formSchema = z.object({
         pin: z.string().min(8, {
             message: 'Enter valid OTP'
@@ -90,8 +95,12 @@ const VerifyPage = () => {
                                 <Button
                                     disabled={isLoading}
                                     type="submit"
-                                    className="bg-black  h-10 mt-10"
+                                    className="flex gap-3 items-center bg-black  h-10 mt-10"
                                 >
+                                    {
+                                        isLoading && 
+                                        <Loader2 className='animate-spin'/>
+                                    }
                                     VERIFY
                                 </Button>
                             </div>

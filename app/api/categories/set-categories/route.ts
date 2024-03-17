@@ -18,7 +18,15 @@ export async function PATCH (req: NextRequest, res: NextResponse) {
         { status: 400 }
       )
 
-
+      await prisma.category.updateMany({
+        where:{
+          userId,
+        },
+        data:{
+          checked:false
+        }
+      });
+      
     const updatedCategories = await prisma.category.updateMany({
       where: {
         userId,

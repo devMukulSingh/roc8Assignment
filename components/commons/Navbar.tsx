@@ -3,7 +3,7 @@ import { BASE_URL } from '@/lib/BASE_URL'
 import axios from 'axios'
 import { ChevronLeft, ChevronRight, LogOut, Search, ShoppingCart } from 'lucide-react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 
 const navLinks = [
     { title: 'Categories' },
@@ -15,6 +15,8 @@ const navLinks = [
 
 const Navbar = () => {
     const router = useRouter();
+    const pathName = usePathname();
+    const user = typeof window !== 'undefined' ?  JSON.parse(localStorage.getItem('user') || '{}') : {};
     const handleLogout = async () => {
         try {
             const { data } = await axios.get(`${BASE_URL}/api/logout`);
@@ -39,11 +41,16 @@ const Navbar = () => {
                         href={'/'}>
                         Orders and Return
                     </Link>
-                    <Link
-                        className='text-sm'
-                        href={'/signup'}>
-                        SignUp
-                    </Link>
+                    {
+                        pathName === '/' ?
+                            <h1>Hi, {user.name}</h1>
+                            :
+                            <Link
+                                className='text-sm'
+                                href={'/signup'}>
+                                SignUp
+                            </Link>
+                    }
                 </div>
 
                 <div className='flex items-center justify-between'>
@@ -55,8 +62,9 @@ const Navbar = () => {
                     </Link>
                     <div className='flex gap-5'>
                         {
-                            navLinks.map((link) => (
+                            navLinks.map((link,index) => (
                                 <Link
+                                    key={index}
                                     href={'/'}
                                 >
                                     {link.title}

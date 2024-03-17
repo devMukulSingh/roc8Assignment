@@ -1,5 +1,6 @@
 'use client'
 import { useState } from "react"
+
 import CategoriesList from "./CategoriesList"
 import PaginationComp from "./PaginationComp"
 export interface CategoriesProps {

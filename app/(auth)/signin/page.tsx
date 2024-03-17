@@ -29,12 +29,17 @@ const SignupPage = () => {
       setLoading(true);
       const { data: res } = await axios.get(`${BASE_URL}/api/signin`, {
         params: {
-          email:data.email,
-          password:data.password
+          email: data.email,
+          password: data.password
         }
       });
       router.push('/');
-      localStorage.setItem('userId',res.id);
+      const user = {
+        userId: res.id,
+        name: res.name
+      }
+      localStorage.setItem('user', JSON.stringify(user));
+
     }
     catch (e) {
       console.log(`Error in onSubmit SignIn ${e}`);
@@ -110,7 +115,7 @@ const SignupPage = () => {
 
               <Button
                 disabled={loading}
-                className="h-12 bg-black rounded-md flex items-center"
+                className="h-12 bg-black rounded-md flex gap-3 items-center"
                 type="submit"
               >
                 {
@@ -123,7 +128,7 @@ const SignupPage = () => {
               <hr className="" />
               <div className="flex gap-2 self-center ">
                 <h1 className="text-neutral-500 text-sm">
-                  Don't have an Account?
+                  Don&apos;t have an Account?
                 </h1>
                 <Link
                   className=""

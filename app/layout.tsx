@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/commons/Navbar";
+const Navbar = dynamic( () => import("@/components/commons/Navbar"),{ssr:false}) 
 import QueryProviders from "@/lib/QueryProviders";
+import dynamic from "next/dynamic";
 
 const inter = Inter({ subsets: ["latin"] });
 

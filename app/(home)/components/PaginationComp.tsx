@@ -34,10 +34,11 @@ const PaginationComp = ({
                 <div className="flex text-center gap-3 ">
 
                     {
-                        pageNumbers.slice((page > 3 ? page - 4 : 0), (page < totalPages - 3 ? page + 3 : totalPages)).map((i) => {
+                        pageNumbers.slice((page > 3 ? page - 4 : 0), (page < totalPages - 3 ? page + 3 : totalPages)).map((i,index) => {
                             return (
 
                                 <h1
+                                    key={index}
                                     className={`cursor-pointer ${page === i ? 'font-bold text-black' : ''}`}
                                     onClick={() => handlePageSelect(i)} >
                                     {i + 1}

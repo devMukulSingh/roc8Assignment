@@ -23,8 +23,8 @@ const SignupPage = () => {
       console.log(`Error in onSubmit User Post req ${error}`);
     },
     onSuccess(data) {
-      
       router.push(`/signup/verify?email=${data.data.email}`);
+
     }
   })
   const formSchema = z.object({
@@ -98,7 +98,7 @@ const SignupPage = () => {
                 disabled={isLoading}
               >
                 {
-                  isLoading && <Loader2/>
+                  isLoading && <Loader2 className="animate-spin" />
                 }
                 CREATE ACCOUNT
               </Button>
