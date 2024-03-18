@@ -9,6 +9,7 @@ import axios from "axios";
 import { BASE_URL } from "@/lib/BASE_URL";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import toast from "react-hot-toast";
 
 export interface CategoriesListProps extends CategoriesProps {
     page: number
@@ -19,7 +20,8 @@ const CategoriesList = ({
     categories,
     page
 }: CategoriesListProps) => {
-    // const items = [
+    
+
     //     {
     //         id: "recents",
     //         label: "Recents",
@@ -45,7 +47,6 @@ const CategoriesList = ({
     //         label: "Documents",
     //     },
     // ] as const
-
     const [loading, setLoading] = useState(false);
     const FormSchema = z.object({
         categories: z.array(z.number()).refine((value) => value.some((item) => item), {
@@ -53,8 +54,7 @@ const CategoriesList = ({
         }),
     })
 
-    const defaultCategories = categories.length > 0 ?
-        categories?.filter(item => item.checked === true).map((item) => item.id) : [] ;
+    const defaultCategories = categories.filter(item => item.checked === true).map((item) => item.id) ;
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -70,9 +70,10 @@ const CategoriesList = ({
             const { data: res } = await axios.patch(`${BASE_URL}/api/categories/set-categories`, {
                 categoryIds: data.categories
             });
-            console.log(res);
+            toast.success('Categories added');
         }
         catch (e) {
+            toast.error('Something went error');
             console.log(`Error in onSubmit ${e}`);
         }
         finally {

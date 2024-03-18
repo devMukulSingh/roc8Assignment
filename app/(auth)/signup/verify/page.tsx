@@ -39,6 +39,7 @@ const VerifyPage = () => {
             console.log(`Error in onSubmit verify Post req ${error}`);
         },
         onSuccess(data) {
+            toast.success('OTP Verified');
             router.push(`/`);
             const user = {
                 userId: data.data.id,

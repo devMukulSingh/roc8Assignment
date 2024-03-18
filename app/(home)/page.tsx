@@ -9,12 +9,12 @@ const HomePage = async () => {
   const userId = Number(cookies().get('userId')?.value);
   if (!userId) redirect('/signin');
 
-  let categories:{
-    id:number,
-    name:string,
-    checked:boolean
+  let categories: {
+    id: number,
+    name: string,
+    checked: boolean
 
-  }[] ;
+  }[];
 
   categories = await prisma.category.findMany(
     {
@@ -26,43 +26,58 @@ const HomePage = async () => {
         name: true,
         id: true
       },
-      orderBy:{
-        id:'asc'
+      orderBy: {
+        id: 'asc'
       }
     },
-  
+
   );
 
   if (!categories || categories.length === 0) {
 
-    const fakeCategories:string[] = [];
+    const fakeCategories: string[] = [];
     for (let i = 0; i < 100; i++) {
       const category = faker.commerce.department();
-        fakeCategories.push(category);
-    
+      fakeCategories.push(category);
+
     }
 
-    //@ts-ignore
-    categories = await prisma.category.createMany({
-        data : [
-            ...fakeCategories.map( (item) => ({
-                userId,
-                name:item
-            }))
-        ],
+    await prisma.category.createMany({
+      data: [
+        ...fakeCategories.map((item) => ({
+          userId,
+          name: item
+        }))
+      ],
 
     })
-    
-    }
-  console.log(categories);
+    categories = await prisma.category.findMany(
+      {
+        where: {
+          userId
+        },
+        select: {
+          checked: true,
+          name: true,
+          id: true
+        },
+        orderBy: {
+          id: 'asc'
+        }
+      },
+
+    );
+
+  }
+  // console.log(categories);
 
 
   return (
-      <>
-        <Categories categories={categories} />
-      </>
-    )
-  }
+    <>
+      <Categories categories={categories} />
+    </>
+  )
+}
 
-  export default HomePage
+export default HomePage
 
