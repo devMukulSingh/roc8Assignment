@@ -53,12 +53,13 @@ const CategoriesList = ({
         }),
     })
 
-    const defaultCategories = categories?.filter(item => item.checked === true).map((item) => item.id);
+    const defaultCategories = categories.length > 0 ?
+        categories?.filter(item => item.checked === true).map((item) => item.id) : [] ;
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
-            categories: [...defaultCategories],
+            categories: [...defaultCategories] || [],
         },
     })
 
@@ -67,17 +68,17 @@ const CategoriesList = ({
         try {
             setLoading(true);
             const { data: res } = await axios.patch(`${BASE_URL}/api/categories/set-categories`, {
-                categoryIds:data.categories
+                categoryIds: data.categories
             });
             console.log(res);
         }
-        catch(e){
+        catch (e) {
             console.log(`Error in onSubmit ${e}`);
         }
-        finally{
+        finally {
             setLoading(false);
         }
-        
+
     }
 
 
@@ -134,10 +135,10 @@ const CategoriesList = ({
                         className="flex items-center gap-5"
                         disabled={loading}
                         type="submit">
-                            {
-                                loading &&
-                                <Loader2 className="animate-spin"/>
-                            }
+                        {
+                            loading &&
+                            <Loader2 className="animate-spin" />
+                        }
                         Submit
                     </Button>
                 </form>
